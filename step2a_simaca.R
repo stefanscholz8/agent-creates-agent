@@ -1,14 +1,11 @@
 library(ggplot2)
 library(plyr)
 
-if (Sys.info()['sysname'] == 'Linux'){path <- paste(getwd(), '/', sep='')}
-if (Sys.info()['sysname'] == 'Windows'){path <- paste(as.vector(strsplit(getwd(), '/')[[1]][1:length(strsplit(getwd(), '/')[[1]])-1]), '/', sep="", collapse="")}
-
 ##### READ IN DATA #####
 ### CORRECTED VALUES OF SINGLES AND AGENTS
-data <- read.csv2(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/data.csv", sep=""), header=T)
-singles <- read.csv(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/singles.csv", sep=""), header=T)
-partners <- read.csv(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/partners.csv", sep=""), header=T)
+data <- read.csv2("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/data.csv", header=T)
+singles <- read.csv("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/singles.csv", header=T)
+partners <- read.csv("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/partners.csv", header=T)
 
 ### DETERMINE GENERAL PARAMETERS
 N <- dim(partners)[1] # Number of Age Groups in partner dataset
@@ -17,10 +14,10 @@ S <- round(X*sum(data$femratio*(1-data$relw_share)*data$ageshare + (1-data$femra
 set.seed(5)
 
 ### MATRICES OF AGE DIFFERENCES
-mat.mm <- read.csv2(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/mat.msm.csv", sep=""), header=F)
-mat.ww <- read.csv2(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/mat.wsw.csv", sep=""), header=F)
-mat.mw <- read.csv2(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/mat.msw.csv", sep=""), header=F)
-mat.wm <- read.csv2(paste(path, "/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/agent-creates-agent/mat.wsm.csv", sep=""), header=F)
+mat.mm <- read.csv2("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/mat.msm.csv", header=F)
+mat.ww <- read.csv2("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/mat.wsw.csv", header=F)
+mat.mw <- read.csv2("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/mat.msw.csv", header=F)
+mat.wm <- read.csv2("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/mat.wsm.csv", header=F)
 
 ### TAKE TIME
 tic <- Sys.time()
@@ -211,12 +208,12 @@ simtime1;simtime2
 
 pop <- as.data.frame(pop)
 
-write.csv(pop, paste(path,'Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/pop.aca.csv', sep=""))
+# write.csv(pop, "pop.aca.csv")
 
 
 ##### PLOT RESULT #####
 ### GET REAL POPULATION
-data1 <- read.csv(paste(path,'/Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/GER_pop.csv', sep=""))
+data1 <- read.csv("https://raw.githubusercontent.com/stefanscholz8/agent-creates-agent/master/GER_pop.csv")
 data1$count <-  data1$count*5
 data1$single <- abs(data1$partner - 1)
 datafem <- subset(data1, data1[,'sex0'] == 0)
@@ -241,4 +238,4 @@ ggplot(data=pop,aes(x = age, fill=interaction(as.factor(sex), as.factor(partner)
   labs(linetype="Real population", fill="Agent population") +
   coord_flip()
 
-ggsave(paste(path, "Dropbox/1_Projekt_Syphilis/2_ABM_model/6_start_pop/AGEPYR_aca.pdf", sep=""), device="pdf", height=5.75, width=4, units='in', scale=2)
+ggsave("AGEPYR_aca.pdf", device="pdf", height=5.75, width=4, units='in', scale=2)
